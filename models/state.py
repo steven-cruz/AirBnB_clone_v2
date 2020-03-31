@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """This is the state class"""
 from models.base_model import BaseModel, Base
+from models.city import City
 from sqlalchemy import Column, String
 from os import getenv
 from sqlalchemy.orm import relationship
@@ -18,7 +19,7 @@ class State(BaseModel, Base):
         nullable=False
     )
 
-    if getenv("HBNB_TYPE_STORAGE") == "DBStorage":
+    if getenv("HBNB_TYPE_STORAGE") == "db":
         cities = relationship(
             "City",
             cascade="all, delete",

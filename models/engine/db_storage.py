@@ -10,7 +10,7 @@ from models.place import Place
 from models.review import Review
 from os import getenv
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 
 
 class DBStorage():
@@ -35,15 +35,15 @@ class DBStorage():
         if cls:
             result = self.__session.query(cls).all()
         else:
-            cl_list = ["State", "City", "User", "Place", "Review", "Amenity"]
+            cl_list = [User, Place, State, City, Amenity, Review]
             for class_name in cl_list:
-                temp = self.__session.query(eval(cl_list)).all()
+                temp = self.__session.query(class_name).all()
                 result.extend(temp)
 
         result_dict = {}
         for res in result:
-            key = "{}.{}".format(type(key).__name__, key.id)
-            value = key
+            key = "{}.{}".format(type(res).__name__, res.id)
+            value = res
             result_dict[key] = value
         return result_dict
 
