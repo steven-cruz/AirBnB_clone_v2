@@ -59,11 +59,14 @@ class DBStorage():
     def delete(self, obj=None):
         """ delete from session """
         if obj:
-            self.__session.query(obj).delete(synchronize_session='fetch')
+            self.__session.delete(obj)
 
     def reload(self):
         """create all tables in the database (feature of SQLAlchemy)"""
         Base.metadata.create_all(self.__engine)
-        session_fact = sessionmaker(bind=self.__engine, expire_on_commit=False)
-        Session = scoped_session(session_fact)
-        self.__session = Session
+        Session = scoped_session(
+            sessionmaker(
+                bind=self.__engine, expire_on_commit=False
+            )
+        )
+        self.__session = Session()
