@@ -23,17 +23,18 @@ class DBStorage:
     def __init__(self):
         """engine init"""
         self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.format(
-                getenv("HBNB_MYSQL_USER"),
-                getenv("HBNB_MYSQL_PWD"),
-                getenv("HBNB_MYSQL_HOST"),
-                getenv("HBNB_MYSQL_DB")),
+            getenv("HBNB_MYSQL_USER"),
+            getenv("HBNB_MYSQL_PWD"),
+            getenv("HBNB_MYSQL_HOST"),
+            getenv("HBNB_MYSQL_DB")),
             pool_pre_ping=True)
-        Base.metadata.create_all(self.__engine)
-        Session = sessionmaker(bind=self.__engine)
-        self.__session = Session()
 
         if getenv('HBNB_ENV') == 'test':
             Base.metadata.drop_all(self.__engine)
+
+        Base.metadata.create_all(self.__engine)
+        Session = sessionmaker(bind=self.__engine)
+        self.__session = Session()
 
     def all(self, cls=None):
         """ show all results """
