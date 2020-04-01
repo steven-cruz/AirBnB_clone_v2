@@ -1,13 +1,20 @@
 #!/usr/bin/python3
 """This is the base model class for AirBnB"""
-import uuid
+
 import models
+import uuid
+from uuid import uuid4
 from datetime import datetime
+import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, DateTime, String
+from sqlalchemy import Column, Integer, DateTime, String
+from os import getenv
 
 
-Base = declarative_base()
+if getenv('HBNB_TYPE_STORAGE') == 'db':
+    Base = declarative_base()
+else:
+    Base = object
 
 
 class BaseModel:
@@ -17,18 +24,17 @@ class BaseModel:
     id = Column(
         String(60),
         primary_key=True,
-        unique=True,
         nullable=False
     )
     created_at = Column(
         DateTime,
         nullable=False,
-        default=datetime.utcnow()
+        default=datetime.utcnow
     )
     updated_at = Column(
         DateTime,
         nullable=False,
-        default=datetime.utcnow()
+        default=datetime.utcnow
     )
 
     def __init__(self, *args, **kwargs):
@@ -41,15 +47,14 @@ class BaseModel:
             created_at: creation date
             updated_at: updated date
         """
+        self.id = str(uuid4())
+        self.created_at = self.updated_at = datetime.now()
         if kwargs:
             for key, value in kwargs.items():
                 if key == "created_at" or key == "updated_at":
                     value = datetime.strptime(value, "%Y-%m-%dT%H:%M:%S.%f")
                 if key != "__class__":
                     setattr(self, key, value)
-        else:
-            self.id = str(uuid.uuid4())
-            self.created_at = self.updated_at = datetime.now()
 
     def __str__(self):
         """returns a string
@@ -57,8 +62,7 @@ class BaseModel:
             returns a string of class name, id, and dictionary
         """
         cp_dict = self.__dict__.copy()
-        if '_sa_instance_state' in cp_dict:
-            del cp_dict['_sa_instance_state']
+        cp_dict.pop("_sa_instance_state", None)
         return "[{}] ({}) {}".format(
             type(self).__name__, self.id, cp_dict)
 
@@ -81,8 +85,8 @@ class BaseModel:
         """
         my_dict = dict(self.__dict__)
         my_dict["__class__"] = str(type(self).__name__)
-        my_dict["created_at"] = self.created_at.isoformat()
         my_dict["updated_at"] = self.updated_at.isoformat()
+        my_dict["created_at"] = self.created_at.isoformat()
         try:
             del my_dict["_sa_instance_state"]
         except Exception:
