@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 """This is the city class"""
 from models.base_model import BaseModel, Base
-from sqlalchemy import Column, DateTime, String, ForeignKey
+from sqlalchemy import Column, String, ForeignKey
 
 
 class City(BaseModel, Base):

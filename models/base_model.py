@@ -17,6 +17,7 @@ class BaseModel:
     id = Column(
         String(60),
         primary_key=True,
+        unique=True,
         nullable=False
     )
     created_at = Column(
@@ -55,8 +56,11 @@ class BaseModel:
         Return:
             returns a string of class name, id, and dictionary
         """
+        cp_dict = self.__dict__.copy()
+        if '_sa_instance_state' in cp_dict:
+            del cp_dict['_sa_instance_state']
         return "[{}] ({}) {}".format(
-            type(self).__name__, self.id, self.__dict__)
+            type(self).__name__, self.id, cp_dict)
 
     def __repr__(self):
         """return a string representaion

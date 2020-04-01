@@ -9,11 +9,11 @@ from models.amenity import Amenity
 from models.place import Place
 from models.review import Review
 from os import getenv
-from sqlalchemy import create_engine
+from sqlalchemy import (create_engine)
 from sqlalchemy.orm import sessionmaker, scoped_session
 
 
-class DBStorage():
+class DBStorage:
     """class to manage MySql DB storage"""
     __engine = None
     __session = None
@@ -40,14 +40,14 @@ class DBStorage():
         else:
             cl_list = [User, Place, State, City, Amenity, Review]
             for class_name in cl_list:
-                temp = self.__session.query(class_name).all()
-                result.extend(temp)
+                temp = self.__session.query(class_name)
+                for res in temp:
+                    result.append(res)
 
         result_dict = {}
         for res in result:
             key = "{}.{}".format(type(res).__name__, res.id)
-            value = res
-            result_dict[key] = value
+            result_dict[key] = res
         return result_dict
 
     def new(self, obj):
