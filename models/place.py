@@ -8,6 +8,17 @@ from models.review import Review
 from os import getenv
 
 
+association_table = Table("place_amenity", Base.metadata,
+                          Column("place_id", String(60),
+                                 ForeignKey("places.id"),
+                                 primary_key=True,
+                                 nullable=False),
+                          Column("amenity_id", String(60),
+                                 ForeignKey("amenities.id"),
+                                 primary_key=True,
+                                 nullable=False))
+
+
 class Place(BaseModel, Base):
     """This is the class for Place
     Attributes:
@@ -36,7 +47,8 @@ class Place(BaseModel, Base):
     longitude = Column(Float, nullable=True)
 
     reviews = relationship("Review", backref="place", cascade="all, delete")
-    """amenity_ids = []"""
+    amenities = relationship("Amenity", secondary="place_amenity")
+    amenity_ids = []
 
     if getenv("HBNB_TYPE_STORAGE") != "db":
         @property
@@ -47,3 +59,18 @@ class Place(BaseModel, Base):
                 if key.place_id == self.id:
                     new_list.append(key)
             return new_list
+
+        @property
+        def amenities(self):
+            """amenities getter"""
+            new_list = []
+            for key in list(models.storage.all(Amenity).values()):
+                if key.id in self.amenity_ids:
+                    new_list.append(key)
+            return new_list
+
+        @amenities.setter
+        def amenities(self, value):
+            """ammenities setter"""
+            if type(value) == Amenity:
+                self.amenity_ids.append(value.id)
