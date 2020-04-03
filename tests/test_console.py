@@ -1,13 +1,24 @@
 #!/usr/bin/python3
 ''' Test suite for the console'''
-
-
-import sys
-import models
 import unittest
+from unittest.mock import patch
 from io import StringIO
+import pep8
+import os
+import json
+import console
+import tests
+import models
+from models.engine.db_storage import DBStorage
 from console import HBNBCommand
-from unittest.mock import create_autospec
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+from models.engine.file_storage import FileStorage
 
 
 class test_console(unittest.TestCase):
