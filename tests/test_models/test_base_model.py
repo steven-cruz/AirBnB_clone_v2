@@ -9,6 +9,10 @@ from models.base_model import BaseModel
 from io import StringIO
 import sys
 import datetime
+import os
+import pep8
+import models
+from models.engine.db_storage import DBStorage
 
 
 class TestBase(unittest.TestCase):
@@ -90,8 +94,6 @@ class TestBase(unittest.TestCase):
         self.assertEqual("<class 'dict'>",
                          str(type(self.my_model.to_dict())))
 
-    @unittest.skipIf(type(models.storage) == DBStorage,
-                     "Testing DBStorage")
     def test_to_dict_class(self):
         '''
             Checks that the __class__ key exists.
@@ -99,8 +101,6 @@ class TestBase(unittest.TestCase):
 
         self.assertEqual("BaseModel", (self.my_model.to_dict())["__class__"])
 
-    @unittest.skipIf(type(models.storage) == DBStorage,
-                     "Testing DBStorage")
     def test_to_dict_type_updated_at(self):
         '''
             Checks the type of the value of updated_at.
@@ -108,8 +108,6 @@ class TestBase(unittest.TestCase):
         self.assertEqual("<class 'str'>",
                          str(type((self.my_model.to_dict())["updated_at"])))
 
-    @unittest.skipIf(type(models.storage) == DBStorage,
-                     "Testing DBStorage")
     def test_to_dict_type_created_at(self):
         '''
             Checks the type of the value of created_at.
