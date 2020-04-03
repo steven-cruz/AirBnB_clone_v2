@@ -2,12 +2,12 @@
 """This is the file storage class for AirBnB"""
 import json
 from models.base_model import BaseModel
-from models.user import User
 from models.state import State
 from models.city import City
-from models.amenity import Amenity
+from models.user import User
 from models.place import Place
 from models.review import Review
+from models.amenity import Amenity
 
 
 class FileStorage:
@@ -27,11 +27,15 @@ class FileStorage:
         """
         if cls is None:
             return self.__objects
-        cls_values = {}
-        for key, value in self.__objects.items():
-            if cls.__name__ == type(value).__name__:
-                cls_values[key] = value
-        return cls_values
+
+        return_values = {}
+        for key, val in self.__objects.items():
+            name_cls = cls.__name__
+            name_obj = type(val).__name__
+            if name_cls == name_obj:
+                return_values[key] = val
+
+        return return_values
 
     def new(self, obj):
         """sets __object to given obj
@@ -63,8 +67,9 @@ class FileStorage:
             pass
 
     def delete(self, obj=None):
-        """delete obj from __objects if it’s inside"""
+        """delete obj from __objects if its inside
+        """
         if obj is not None:
-            del_key = "{}.{}".format(type(obj).__name__, obj.id)
-            if del_key in self.__objects:
-                del self.__objects[del_key]
+            key_obj = "{}.{}".format(type(obj).__name__, obj.id)
+            if key_obj in self.__objects:
+                del self.__objects[key_obj]
