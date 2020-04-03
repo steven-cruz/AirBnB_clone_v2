@@ -55,6 +55,8 @@ class TestBase(unittest.TestCase):
         self.assertEqual(self.my_model.updated_at.year,
                          self.my_model.created_at.year)
 
+    @unittest.skipIf(type(models.storage) == DBStorage,
+                     "Testing DBStorage")
     def test_save(self):
         '''
             Checks that after updating the instance; the dates differ in the
@@ -88,6 +90,8 @@ class TestBase(unittest.TestCase):
         self.assertEqual("<class 'dict'>",
                          str(type(self.my_model.to_dict())))
 
+    @unittest.skipIf(type(models.storage) == DBStorage,
+                     "Testing DBStorage")
     def test_to_dict_class(self):
         '''
             Checks that the __class__ key exists.
@@ -95,6 +99,8 @@ class TestBase(unittest.TestCase):
 
         self.assertEqual("BaseModel", (self.my_model.to_dict())["__class__"])
 
+    @unittest.skipIf(type(models.storage) == DBStorage,
+                     "Testing DBStorage")
     def test_to_dict_type_updated_at(self):
         '''
             Checks the type of the value of updated_at.
@@ -102,6 +108,8 @@ class TestBase(unittest.TestCase):
         self.assertEqual("<class 'str'>",
                          str(type((self.my_model.to_dict())["updated_at"])))
 
+    @unittest.skipIf(type(models.storage) == DBStorage,
+                     "Testing DBStorage")
     def test_to_dict_type_created_at(self):
         '''
             Checks the type of the value of created_at.

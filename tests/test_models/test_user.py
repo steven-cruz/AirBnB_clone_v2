@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-
 '''
     All the test for the user model are implemented here.
 '''
@@ -10,6 +9,9 @@ from models.user import User
 from io import StringIO
 import sys
 import datetime
+import pep8
+import models
+from models.engine.db_storage import DBStorage
 
 
 class TestUser(unittest.TestCase):
@@ -17,52 +19,70 @@ class TestUser(unittest.TestCase):
         Testing User class
     '''
 
-    def test_User_inheritance(self):
-        '''
-            tests that the User class Inherits from BaseModel
-        '''
-        new_user = User()
-        self.assertIsInstance(new_user, BaseModel)
+    @classmethod
+    def setUpClass(cls):
+        """set up for test"""
+        cls.user = User()
+        cls.user.first_name = "Kevin"
+        cls.user.last_name = "Yook"
+        cls.user.email = "yook00627@gmamil.com"
+        cls.user.password = "secret"
 
-    def test_User_attributes(self):
-        '''
-            Test the user attributes exist
-        '''
+    @classmethod
+    def teardown(cls):
+        """at the end of the test this will tear it down"""
+        del cls.user
 
-        new_user = User()
-        self.assertTrue("email" in new_user.__dir__())
-        self.assertTrue("first_name" in new_user.__dir__())
-        self.assertTrue("last_name" in new_user.__dir__())
-        self.assertTrue("password" in new_user.__dir__())
+    def tearDown(self):
+        """teardown"""
+        try:
+            os.remove("file.json")
+        except Exception:
+            pass
 
-    def test_type_email(self):
-        '''
-            Test the type of name
-        '''
-        new = User()
-        name = getattr(new, "email")
-        self.assertIsInstance(name, str)
+    def test_pep8_User(self):
+        """Tests pep8 style"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/user.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_type_first_name(self):
-        '''
-            Test the type of name
-        '''
-        new = User()
-        name = getattr(new, "first_name")
-        self.assertIsInstance(name, str)
+    def test_checking_for_docstring_User(self):
+        """checking for docstrings"""
+        self.assertIsNotNone(User.__doc__)
 
-    def test_type_last_name(self):
-        '''
-            Test the type of last_name
-        '''
-        new = User()
-        name = getattr(new, "last_name")
-        self.assertIsInstance(name, str)
+    def test_attributes_User(self):
+        """chekcing if User have attributes"""
+        self.assertTrue('email' in self.user.__dict__)
+        self.assertTrue('id' in self.user.__dict__)
+        self.assertTrue('created_at' in self.user.__dict__)
+        self.assertTrue('updated_at' in self.user.__dict__)
+        self.assertTrue('password' in self.user.__dict__)
+        self.assertTrue('first_name' in self.user.__dict__)
+        self.assertTrue('last_name' in self.user.__dict__)
 
-    def test_type_password(self):
-        '''
-            Test the type of password
-        '''
-        new = User()
-        name = getattr(new, "password")
-        self.assertIsInstance(name, str)
+    def test_is_subclass_User(self):
+        """test if User is subclass of Basemodel"""
+        self.assertTrue(issubclass(self.user.__class__, BaseModel), True)
+
+    def test_attribute_types_User(self):
+        """test attribute type for User"""
+        self.assertEqual(type(self.user.email), str)
+        self.assertEqual(type(self.user.password), str)
+        self.assertEqual(type(self.user.first_name), str)
+        self.assertEqual(type(self.user.first_name), str)
+
+    @unittest.skipIf(type(models.storage) == DBStorage,
+                     "Testing DBStorage")
+    def test_save_User(self):
+        """test if the save works"""
+        self.user.save()
+        self.assertNotEqual(self.user.created_at, self.user.updated_at)
+
+    @unittest.skipIf(type(models.storage) == DBStorage,
+                     "Testing DBStorage")
+    def test_to_dict_User(self):
+        """test if dictionary works"""
+        self.assertEqual('to_dict' in dir(self.user), True)
+
+if __name__ == "__main__":
+    unittest.main()
