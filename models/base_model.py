@@ -2,19 +2,12 @@
 """This is the base model class for AirBnB"""
 
 import models
-import uuid
 from uuid import uuid4
 from datetime import datetime
-import sqlalchemy
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, DateTime, String
-from os import getenv
+from sqlalchemy import Column, DateTime, String
 
-
-if getenv('HBNB_TYPE_STORAGE') == 'db':
-    Base = declarative_base()
-else:
-    Base = object
+Base = declarative_base()
 
 
 class BaseModel:
