@@ -7,12 +7,13 @@ import os
 env.user = "ubuntu"
 env.hosts = ['34.74.199.48', '52.72.131.38']
 
+
 def do_deploy(archive_path):
     """ Fabric script to deply web_static to servers """
     if os.path.exists(archive_path):
         new_path = archive_path[9:]
         de_path = '/data/web_static/releases/{}/'.format(new_path)[0:-5]
-        put (archive_path, '/tmp/')
+        put(archive_path, '/tmp/')
         run('mkdir -p {}'.format(de_path))
         run('tar -xzf /tmp/{} -C {}'.format(new_path, de_path))
         run('rm /tmp/{}'.format(new_path))
