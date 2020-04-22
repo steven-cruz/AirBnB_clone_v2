@@ -10,15 +10,17 @@ def hello_hbnb():
     """ Python function that prints Hello HBNB """
     return "Hello HBNB!"
 
+
 @app.route('/hbnb')
 def hbnb():
     """ Python function that prints HBNB """
     return "HBNB"
 
+
 @app.route('/c/<text>')
-def c():
+def c_text(text):
     """ Python function that prints C followed by the value ot the <text> """
-    return "C %s" % escape(text)
+    return "C {}".format(text.replace("_", " "))
 
 
 if __name__ == '__main__':
