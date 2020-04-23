@@ -1,4 +1,4 @@
-!/usr/bin/python3
+#!/usr/bin/python3
 # Python script that starts a flask application on 0.0.0.0 port 5000/ with
 # variables: Show if number is even or odd
 from flask import Flask, render_template
