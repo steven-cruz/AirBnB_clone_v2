@@ -25,13 +25,10 @@ def c_text(text):
 
 @app.route('/python')
 @app.route('/python/<text>')
-def python_text(text="is cool"):
-    """
-    Python function that prints Python follewed by value of the <text>
-    variable, the default value of <text> is "is cool"
-    """
-    return "Python {}".format(text.replace("_", " "))
+def python_magic(text="is cool"):
+    """Python function to print Python magic with directory"""
+    return "Python " + text.replace('_', ' ')
 
 
-if __name__ == '__mian__':
+if __name__ == "__main__":
     app.run(host="0.0.0.0", port=5000)
